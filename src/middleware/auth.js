@@ -1,6 +1,6 @@
 const jwtVariable = require('../../variables/jwt')
 
-const UserProfile = require('../models/UserProfile')
+const UserProfile = require('../models/User')
 
 const { verifyToken } = require('../methods/auth')
 
