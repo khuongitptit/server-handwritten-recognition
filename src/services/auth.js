@@ -13,17 +13,14 @@ const Boom = require('@hapi/boom');
 async function authenticate(data) {
   const checkAccount = await Account.findOne({ username: data.username });
   if (!checkAccount) {
-    const err = Boom.unauthorized('username_not_exist');
-    _.assign(err.output.payload, { error_part: 'username' });
-    throw err;
+    throw Boom.unauthorized('username_not_exist');
   }
   if (!_.get(checkAccount, 'active')) {
     throw Boom.notAcceptable('inactive_account');
   }
   const isPasswordValid = checkPassword(data.password, checkAccount.password);
   if (!isPasswordValid) {
-    const err = Boom.unauthorized('incorrect_password');
-    _.assign(err.output.payload, { error_part: 'password' });
+    throw Boom.unauthorized('incorrect_password');
   }
   const accessToken = await generateAccessToken({
     username: checkAccount.username,
@@ -37,10 +34,10 @@ async function authenticate(data) {
   } else {
     refreshToken = _.get(checkAccount, 'refreshToken');
   }
-  console.log("check",checkAccount)
   await Account.update(checkAccount._id, _.assign(checkAccount, {accessToken, refreshToken}));
   return {
     _id: _.get(checkAccount, '_id'),
+    username: _.get(checkAccount, 'username'),
     accessToken,
     refreshToken,
   };
@@ -49,15 +46,11 @@ async function authenticate(data) {
 async function register(data) {
   let checkAccount = await Account.findOne({ email: data.email });
   if (checkAccount) {
-    const err = Boom.badRequest('email_in_used');
-    _.assign(err.output.payload, { error_part: 'email' });
-    throw err;
+    throw Boom.badRequest('email_used');
   }
   checkAccount = await Account.findOne({ username: data.username });
   if (checkAccount) {
-    const err = Boom.badRequest('username_existed');
-    _.assign(err.output.payload, { error_part: 'username' });
-    throw err;
+    throw Boom.badRequest('username_existed');
   }
   _.assign(data, {
     activeKey: randomKey(),

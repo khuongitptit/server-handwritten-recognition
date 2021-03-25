@@ -1,12 +1,13 @@
 const _ = require('lodash');
 const Boom = require('@hapi/boom');
-const auth = require('./auth')
-
-const all = _.concat(auth);
+const auth = require('./auth');
+const app = require('./app');
+const post = require('./post');
+const all = _.concat(auth, app, post);
 normalizeHandlers(all);
 
 function normalizeHandlers(_routes) {
-  _routes.forEach((route) => {
+  _routes.forEach(route => {
     const defaultHandler = route.handler;
     route.handler = async (request, h) => {
       try {
