@@ -1,9 +1,10 @@
 const _ = require('lodash');
 const Boom = require('@hapi/boom');
 const auth = require('./auth');
+const profile = require('./profile');
 const app = require('./app');
 const post = require('./post');
-const all = _.concat(auth, app, post);
+const all = _.concat(auth, profile, app, post);
 normalizeHandlers(all);
 
 function normalizeHandlers(_routes) {

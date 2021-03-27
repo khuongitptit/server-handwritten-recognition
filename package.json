@@ -23,6 +23,7 @@
     "handlebars": "^4.7.7",
     "hapi-geo-locate": "^4.1.1",
     "jsonwebtoken": "^8.5.1",
+    "jwt-decode": "^3.1.2",
     "lodash": "^4.17.20",
     "mongodb": "^3.5.9",
     "mongoose": "^5.9.20",

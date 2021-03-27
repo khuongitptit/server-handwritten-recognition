@@ -24,8 +24,6 @@ async function findOne(query) {
   return Account.findOne(query);
 }
 async function update(id, data) {
-  console.log("id",id)
-  console.log("data",data)
   return Account.updateOne({ _id: id }, data);
 }
 async function add(data) {
@@ -34,6 +32,15 @@ async function add(data) {
 async function activate(activeKey) {
   return Account.updateOne({ activeKey }, { active: true });
 }
+async function searchByKeyword(userId, keyword) {
+  const regex = new RegExp(keyword, 'i');
+  return Account.find({
+    $and: [
+      { _id: { $ne: userId } },
+      { $or: [{ username: regex }, { fullname: regex }] },
+    ],
+  });
+}
 module.exports = {
   get,
   findOne,
@@ -41,4 +48,5 @@ module.exports = {
   add,
   find: Account.find.bind(Account),
   activate,
+  searchByKeyword,
 };

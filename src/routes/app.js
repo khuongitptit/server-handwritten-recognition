@@ -1,5 +1,6 @@
 const Joi = require('@hapi/joi');
 const appController = require('../controllers/app');
+const {authorization} = require('../services/authorization');
 
 module.exports = [
   {
@@ -15,6 +16,10 @@ module.exports = [
           userId: Joi.string().required(),
         }),
       },
+      pre:[{
+        method: authorization,
+        assign :'isAuth'
+      }]
     },
   },
 ];
