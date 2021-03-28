@@ -10,6 +10,8 @@ const AccountSchema = new mongoose.Schema(
     fullname: String,
     username: String,
     password: String,
+    birthday: Object,
+    avatarURL: String,
     activeKey: String,
     accessToken: String,
     refreshToken: String,

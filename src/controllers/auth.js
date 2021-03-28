@@ -9,7 +9,11 @@ async function register(request) {
   const data = request.payload;
   return authServices.register(data);
 }
-
+async function updateAccount(request) {
+  const {accountId} = request.params;
+  const data = request.payload;
+  return authServices.updateAccount(accountId, data);
+}
 async function confirmEmail(request, reply) {
   const data = request.params;
   const result = await authServices.confirmEmail(data);
@@ -23,5 +27,6 @@ async function confirmEmail(request, reply) {
 module.exports = {
   authenticate,
   register,
+  updateAccount,
   confirmEmail,
 };

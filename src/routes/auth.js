@@ -44,6 +44,32 @@ module.exports = [
     },
   },
   {
+    method: 'POST',
+    path: '/auth/update/{accountId}',
+    handler: userAuth.updateAccount,
+    config: {
+      auth: false,
+      description: 'Update account in4',
+      notes: [
+        'API for user update their account in4',
+      ],
+      tags: ['api', 'internal'],
+      validate: {
+        payload: Joi.object({
+          birthday: Joi.object({
+            date: Joi.number(),
+            month: Joi.string(),
+            year: Joi.number()
+          }),
+          avatarURL: Joi.string()
+        }),
+        params: Joi.object({
+          userId: Joi.string().required(),
+        })
+      },
+    },
+  },
+  {
     method: 'GET',
     path: '/auth/confirm-email/{activeKey}',
     handler: userAuth.confirmEmail,

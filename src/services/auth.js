@@ -34,7 +34,10 @@ async function authenticate(data) {
   } else {
     refreshToken = _.get(checkAccount, 'refreshToken');
   }
-  await Account.update(checkAccount._id, _.assign(checkAccount, {accessToken, refreshToken}));
+  await Account.update(
+    checkAccount._id,
+    _.assign(checkAccount, { accessToken, refreshToken })
+  );
   return {
     _id: _.get(checkAccount, '_id'),
     username: _.get(checkAccount, 'username'),
@@ -53,17 +56,24 @@ async function register(data) {
     throw Boom.badRequest('username_existed');
   }
   _.assign(data, {
-    activeKey: randomKey(),
     password: encodePassword(data.password),
+    activeKey: randomKey(),
   });
-  const createdAccount = await Account.add(data);
-  if (createdAccount) {
-    mailServices.sendMail({
-      to: createdAccount.email,
-      activeKey: createdAccount.activeKey,
-    });
+  const registerAccount = await Account.add(data);
+  mailServices.sendMail({
+    to: registerAccount.email,
+    activeKey: registerAccount.activeKey,
+  });
+  return _.pick(registerAccount, ['_id', 'email', 'fullname', 'username']);
+}
+
+async function updateAccount(accountId, data) {
+  const updateAccount = await Account.get(accountId);
+  if(!updateAccount) {
+    throw Boom.badRequest();
   }
-  return { _id: createdAccount._id };
+  updateAccount = await Account.update(accountId, data).then(() => Account.get(accountId));
+  return _.pick(updateAccount, ['_id', 'email', 'fullname', 'username', 'birthday','avatarURL']);
 }
 
 async function confirmEmail(data) {
@@ -75,5 +85,6 @@ async function confirmEmail(data) {
 module.exports = {
   authenticate,
   register,
+  updateAccount,
   confirmEmail,
 };
