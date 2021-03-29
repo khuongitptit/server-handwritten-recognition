@@ -2,11 +2,12 @@ const _ = require('lodash');
 const Account = require('../models/Account');
 const mailServices = require('./mail');
 const {
-  randomKey,
+  randomCode,
   encodePassword,
   checkPassword,
   generateAccessToken,
   generateRefreshToken,
+  isCodeExpired
 } = require('../utils/auth');
 const Boom = require('@hapi/boom');
 
@@ -57,34 +58,48 @@ async function register(data) {
   }
   _.assign(data, {
     password: encodePassword(data.password),
-    activeKey: randomKey(),
+    activeConfig: randomCode(),
   });
   const registerAccount = await Account.add(data);
   mailServices.sendMail({
     to: registerAccount.email,
-    activeKey: registerAccount.activeKey,
+    activeCode: _.get(registerAccount, 'activeConfig.code'),
   });
   return _.pick(registerAccount, ['_id', 'email', 'fullname', 'username']);
 }
 
 async function updateAccount(accountId, data) {
-  const updateAccount = await Account.get(accountId);
+  let updateAccount = await Account.get(accountId);
   if(!updateAccount) {
     throw Boom.badRequest();
   }
+  updateAccount = _.assign(updateAccount, data);
   updateAccount = await Account.update(accountId, data).then(() => Account.get(accountId));
   return _.pick(updateAccount, ['_id', 'email', 'fullname', 'username', 'birthday','avatarURL']);
 }
 
-async function confirmEmail(data) {
-  const { activeKey } = data;
-  const accountToActivate = await Account.findOne({ activeKey });
-  await Account.activate(activeKey);
-  return Account.get(accountToActivate._id);
+async function verifyEmail(accountId, activeCode) {
+  let emailToVerify = await Account.get(accountId);
+  console.log("11111111",emailToVerify);
+  if(!emailToVerify) {
+    throw Boom.badRequest();
+  }
+  console.log("222222222",emailToVerify);
+  emailToVerify = await Account.find({_id: accountId, 'activeConfig.code': activeCode});
+  console.log("3333333",emailToVerify);
+  if(_.isEmpty(emailToVerify)) {
+    throw Boom.badData("wrong_active_code");
+  }
+  if(isCodeExpired(_.get(emailToVerify, 'activeConfig.expiredIn'))) {
+    throw Boom.clientTimeout();
+  }
+  emailToVerify = await Account.activate(accountId, activeCode).then(() => Account.get(accountId));
+  return _.pick(emailToVerify, ['_id','active']);
 }
+
 module.exports = {
   authenticate,
   register,
   updateAccount,
-  confirmEmail,
+  verifyEmail,
 };

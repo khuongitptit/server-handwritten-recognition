@@ -7,9 +7,11 @@ const randToken = require('rand-token');
 const sign = promisify(jwt.sign).bind(jwt);
 const verify = promisify(jwt.verify).bind(jwt);
 
-function randomKey() {
-  const timeStamp = Date.now() % 100;
-  return crypto.randomBytes(timeStamp).toString('hex');
+function randomCode() {
+  return {
+    code: Math.floor(100000 + Math.random() * 900000),
+    expiredIn: Date.now() + config.get('CODE_LIFE'),
+  };
 }
 
 function encodePassword(password) {
@@ -26,10 +28,10 @@ async function generateAccessToken(payload) {
       {
         payload,
       },
-      config.get("ACCESS_TOKEN_SECRET"),
+      config.get('ACCESS_TOKEN_SECRET'),
       {
         algorithm: 'HS256',
-        expiresIn: config.get("ACCESS_TOKEN_LIFE"),
+        expiresIn: config.get('ACCESS_TOKEN_LIFE'),
       }
     );
   } catch (error) {
@@ -42,10 +44,15 @@ function generateRefreshToken() {
   return randToken.generate(100);
 }
 
+function isCodeExpired(expiredIn) {
+  return expiredIn < Date.now();
+}
+
 module.exports = {
-  randomKey,
+  randomCode,
   encodePassword,
   checkPassword,
   generateAccessToken,
   generateRefreshToken,
+  isCodeExpired,
 };

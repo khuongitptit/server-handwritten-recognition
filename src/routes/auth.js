@@ -64,15 +64,15 @@ module.exports = [
           avatarURL: Joi.string()
         }),
         params: Joi.object({
-          userId: Joi.string().required(),
+          accountId: Joi.string().required(),
         })
       },
     },
   },
   {
-    method: 'GET',
-    path: '/auth/confirm-email/{activeKey}',
-    handler: userAuth.confirmEmail,
+    method: 'POST',
+    path: '/auth/verify-email/{accountId}',
+    handler: userAuth.verifyEmail,
     config: {
       auth: false,
       description: 'Confirm user email',
@@ -80,23 +80,12 @@ module.exports = [
       tags: ['api', 'internal'],
       validate: {
         params: Joi.object({
-          activeKey: Joi.string().required(),
+          accountId: Joi.string().required(),
         }),
+        payload: Joi.object({
+          activeCode: Joi.string().length(6).required()
+        })
       },
     },
   },
-  // {
-  //   method: 'POST',
-  //   path: '/auth/logout',
-  //   handler: userAuth.logout,
-  //   config: {
-  //     description: 'Process user logout action in the backend',
-  //     tags: ['api'],
-  //     plugins: {
-  //       authorization: {
-  //         role: [accessRoles.user],
-  //       },
-  //     },
-  //   },
-  // },
 ];

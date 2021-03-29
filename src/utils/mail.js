@@ -1,12 +1,10 @@
-const { confirmationEmailURL } = require('../constants/base');
-
-function getConfirmationMailOptions({ to, activeKey }) {
+function getConfirmationMailOptions({ to, activeCode }) {
   return {
     to,
-    subject: 'Please confirm your Email account',
+    subject: 'Instagram Khuong - Email verification',
     html: `<h1>Instagram Khuong</h1><br/>
-      <p>Click the link to confirm your email and active your Instagram account</p>
-      <a href="${confirmationEmailURL}/${activeKey}">Confirm email</a><br/>
+      <p>This is your verification code</p>
+      <h5>${activeCode}</h5>
       <p>Thank you</p>
     `,
   };

@@ -11,5 +11,6 @@
   },
   "SALT_ROUNDS": 10,
   "ACCESS_TOKEN_SECRET": "khuong_deptrai",
-  "ACCESS_TOKEN_LIFE": "10h"
+  "ACCESS_TOKEN_LIFE": "10h",
+  "CODE_LIFE": 60000
 }

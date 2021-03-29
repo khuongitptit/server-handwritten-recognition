@@ -12,7 +12,10 @@ const AccountSchema = new mongoose.Schema(
     password: String,
     birthday: Object,
     avatarURL: String,
-    activeKey: String,
+    activeConfig: {
+      code: Number,
+      expiredIn: Number,
+    },
     accessToken: String,
     refreshToken: String,
   },
@@ -31,8 +34,8 @@ async function update(id, data) {
 async function add(data) {
   return Account.create(data);
 }
-async function activate(activeKey) {
-  return Account.updateOne({ activeKey }, { active: true });
+async function activate(accountId, activeCode) {
+  return Account.updateOne({ _id: accountId, 'activeConfig.code': activeCode }, {$set: {active: true}, $unset: {activeConfig: 1}});
 }
 async function searchByKeyword(userId, keyword) {
   const regex = new RegExp(keyword, 'i');

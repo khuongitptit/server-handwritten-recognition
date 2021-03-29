@@ -6,9 +6,9 @@ const smtpTransporter = nodeMailer.createTransport({
   auth: config.get('MAIL_OPTIONS'),
 });
 
-async function sendMail({ to, activeKey }) {
+async function sendMail({ to, activeCode }) {
   return smtpTransporter.sendMail(
-    getConfirmationMailOptions({ to, activeKey })
+    getConfirmationMailOptions({ to, activeCode })
   );
 }
 
