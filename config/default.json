@@ -1,16 +1,5 @@
 {
-  "PORT": 8086,
-  "DB_URI": "mongodb://localhost:27017/insta_khuong",
-  "MAIL_OPTIONS": {
-    "type": "OAuth2",
-    "user": "khuongnd9999",
-    "pass": "khuongnd99",
-    "clientId": "422669302730-m4crmtv0e0vj8cf3l0d2dr0otkdchn6i.apps.googleusercontent.com",
-    "clientSecret": "akghk_b_rmMfMEOVcUKNokSW",
-    "refreshToken": "1//04rTyrJT1M-GnCgYIARAAGAQSNwF-L9IrxF3RShSdx3V1Dm77bBA5ztIM53uGh3FdrcjG2oBSBAG6lJMDx8qG5gN-CffZs5WGLVg"
-  },
-  "SALT_ROUNDS": 10,
-  "ACCESS_TOKEN_SECRET": "khuong_deptrai",
-  "ACCESS_TOKEN_LIFE": "10h",
-  "CODE_LIFE": 60000
+  "PORT": 8088,
+  "DB_URI": "mongodb://localhost:27017/handwritten-character-recognition",
+  "imageSizeLimit": 512000
 }
