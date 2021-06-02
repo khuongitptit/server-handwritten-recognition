@@ -1,0 +1,5 @@
+{
+  "PORT": 8088,
+  "DB_URI": "mongodb://localhost:27017/handwritten-character-recognition",
+  "imageSizeLimit": 512000
+}
