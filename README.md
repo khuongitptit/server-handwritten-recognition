@@ -1,4 +1,4 @@
-# server-handwritten-recognition
-Requirements: MongoDB. NodeJS
-
-Run: node src/app
+# Requirements
+MongoDB. NodeJS
+# Run
+nodemon src/app
