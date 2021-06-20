@@ -1,5 +1,5 @@
 const { Image } = require('image-js');
-const hog = require('hog-features');
+const hog = require('../hog_features/index');
 
 async function extractHOG(file) {
   const image = await Image.load(file);
